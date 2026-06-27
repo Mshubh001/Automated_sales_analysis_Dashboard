@@ -1,0 +1,116 @@
+CREATE TABLE sales (
+    row_id INT,
+    order_id VARCHAR(50),
+    order_date DATE,
+    ship_date DATE,
+    ship_mode VARCHAR(50),
+    customer_id VARCHAR(50),
+    customer_name VARCHAR(100),
+    segment VARCHAR(50),
+    country VARCHAR(50),
+    city VARCHAR(50),
+    state VARCHAR(50),
+    postal_code INT,
+    region VARCHAR(50),
+    product_id VARCHAR(50),
+    category VARCHAR(50),
+    sub_category VARCHAR(50),
+    product_name TEXT,
+    sales FLOAT,
+    quantity INT,
+    discount FLOAT,
+    profit FLOAT
+);
+
+
+SELECT * FROM sales_dashboard LIMIT 10;
+
+01-TOTAL SALES
+SELECT SUM("Sales") AS total_sales
+FROM sales_dashboard;
+
+02--MONTHLY SALES
+SELECT EXTRACT(MONTH FROM "Order_Date") AS month,
+       SUM("Sales") AS total_sales
+FROM sales_dashboard
+GROUP BY month
+ORDER BY month;
+
+03--TOP PRODUCTS
+SELECT "Product_Name",
+       SUM("Sales") AS revenue
+FROM sales_dashboard
+GROUP BY "Product_Name"
+ORDER BY revenue DESC
+LIMIT 10;  
+
+04--WHICH CATEGORY GENERATE MUCH REVENUE 
+SELECT "Category",
+SUM("Sales") AS total_sales
+FROM sales_dashboard
+GROUP BY "Category"
+ORDER BY total_sales DESC;
+
+05--SUBCATEGORY WISE PROFIT
+SELECT "Sub-Category",
+       SUM("Profit") AS total_profit
+FROM sales_dashboard
+GROUP BY "Sub-Category"
+ORDER BY total_profit DESC;
+
+06--RIGION WISE SALES
+SELECT "Region",
+SUM("Sales") AS total_sales
+FROM sales_dashboard
+GROUP BY "Region"
+ORDER by total_sales DESC;
+
+07--TOP 10 PRODUCTS
+SELECT "Product_Name",
+       SUM("Sales") AS revenue
+FROM sales_dashboard
+GROUP BY "Product_Name"
+ORDER BY revenue DESC
+LIMIT 10;
+
+08--TOP CUSTOMER
+SELECT "Customer_Name",
+       SUM("Sales") AS total_sales
+FROM sales_dashboard
+GROUP BY "Customer_Name"
+ORDER BY total_sales DESC
+LIMIT 10;
+
+09--LOSS MAKING PRODUCTS
+SELECT "Product_Name",
+       SUM("Profit") AS total_profit
+FROM sales_dashboard
+GROUP BY "Product_Name"
+HAVING SUM("Profit") < 0
+ORDER BY total_profit;
+
+10--MONTHLY SALES TREND 
+SELECT EXTRACT(MONTH FROM "Order_Date") AS month,
+       SUM("Sales") AS total_sales
+FROM sales_dashboard
+GROUP BY month
+ORDER BY month;
+
+11--MONTHLY PROFIT TREND 
+SELECT EXTRACT(MONTH FROM "Order_Date") AS month,
+       SUM("Profit") AS total_profit
+FROM sales_dashboard
+GROUP BY month
+ORDER BY month;
+
+12--AVERAGE ORDER VALUE
+SELECT ROUND(
+SUM("Sales")::numeric /
+COUNT(DISTINCT "Order_ID"),
+2
+) AS avg_order_value
+FROM sales_dashboard;
+
+
+SELECT COUNT(*)
+FROM sales_dashboard;
